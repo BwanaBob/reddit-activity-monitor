@@ -1,7 +1,7 @@
 {
   "name": "jakeellicious",
-  "version": "0.0.0",
-  "description": "A moderator utility bot for Reddit using the Devvit platform that monitors subreddit activity and relays updates to Discord",
+  "version": "1.0.0",
+  "description": "A comprehensive moderator utility bot for Reddit using the Devvit platform that monitors subreddit activity and relays updates to Discord",
   "main": "src/main.ts",
   "scripts": {
     "build": "npm run test && npm run lint",
