@@ -37,6 +37,24 @@ export const setupCommentHandler = (
         const comment = await context.reddit.getCommentById(event.comment.id);
         const subreddit = await context.reddit.getCurrentSubreddit();
         
+        // Get user avatar (comments don't have rich author data like modmail)
+        let userAvatarUrl;
+        let subredditIconUrl;
+        
+        // Get subreddit icon as fallback
+        try {
+          subredditIconUrl = `https://styles.redditmedia.com/t5_${subreddit.id.replace('t5_', '')}/styles/communityIcon_${subreddit.id.replace('t5_', '')}.png`;
+        } catch (error) {
+          subredditIconUrl = 'https://www.redditstatic.com/desktop2x/img/favicon/android-icon-192x192.png';
+        }
+        
+        // Use constructed avatar URL since comment objects don't have avatar data
+        if (comment.authorName && comment.authorName !== '[deleted]') {
+          userAvatarUrl = `https://www.reddit.com/user/${comment.authorName}/avatar.png`;
+        }
+        
+        const finalIconUrl = userAvatarUrl || subredditIconUrl;
+        
         const embed = {
           title: '💬 New Comment',
           description: comment.body?.length > 300 
@@ -44,12 +62,12 @@ export const setupCommentHandler = (
             : comment.body || '[deleted]',
           url: `https://reddit.com${comment.permalink}`,
           color: 0x10b981, // Green color
+          author: comment.authorName && comment.authorName !== '[deleted]' ? {
+            name: comment.authorName,
+            url: `https://reddit.com/user/${comment.authorName}`,
+            icon_url: finalIconUrl,
+          } : undefined,
           fields: [
-            {
-              name: 'Author',
-              value: comment.authorName || '[deleted]',
-              inline: true,
-            },
             {
               name: 'Subreddit',
               value: `r/${subreddit.name}`,

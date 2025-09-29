@@ -23,17 +23,35 @@ export const setupPostHandler = (
         const post = await context.reddit.getPostById(event.post.id);
         const subreddit = await context.reddit.getCurrentSubreddit();
         
+        // Get user avatar (posts don't have rich author data like modmail)
+        let userAvatarUrl;
+        let subredditIconUrl;
+        
+        // Get subreddit icon as fallback
+        try {
+          subredditIconUrl = `https://styles.redditmedia.com/t5_${subreddit.id.replace('t5_', '')}/styles/communityIcon_${subreddit.id.replace('t5_', '')}.png`;
+        } catch (error) {
+          subredditIconUrl = 'https://www.redditstatic.com/desktop2x/img/favicon/android-icon-192x192.png';
+        }
+        
+        // Use constructed avatar URL since post objects don't have avatar data
+        if (post.authorName && post.authorName !== '[deleted]') {
+          userAvatarUrl = `https://www.reddit.com/user/${post.authorName}/avatar.png`;
+        }
+        
+        const finalIconUrl = userAvatarUrl || subredditIconUrl;
+        
         const embed = {
           title: '📝 New Post',
           description: post.title,
           url: `https://reddit.com${post.permalink}`,
           color: 0x4f46e5, // Indigo color
+          author: post.authorName && post.authorName !== '[deleted]' ? {
+            name: post.authorName,
+            url: `https://reddit.com/user/${post.authorName}`,
+            icon_url: finalIconUrl,
+          } : undefined,
           fields: [
-            {
-              name: 'Author',
-              value: post.authorName || '[deleted]',
-              inline: true,
-            },
             {
               name: 'Subreddit',
               value: `r/${subreddit.name}`,
