@@ -1,0 +1,34 @@
+{
+  "name": "jakeellicious",
+  "version": "0.0.0",
+  "description": "A moderator utility bot for Reddit using the Devvit platform that monitors subreddit activity and relays updates to Discord",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "npm run test && npm run lint",
+    "dev": "devvit playtest",
+    "upload": "devvit upload",
+    "publish": "devvit publish",
+    "install-deps": "npm install",
+    "install-to-subreddit": "devvit install",
+    "logs": "devvit logs",
+    "test": "echo 'No tests specified' && exit 0",
+    "lint": "echo 'No linting configured' && exit 0"
+  },
+  "keywords": [
+    "reddit",
+    "devvit",
+    "moderation",
+    "discord",
+    "webhook",
+    "bot"
+  ],
+  "author": "Your Name",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@devvit/public-api": "0.12.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {},
+  "type": "module",
+  "private": true
+}

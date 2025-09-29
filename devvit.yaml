@@ -1,0 +1,12 @@
+schemaVersion: 0.0.1
+slug: reddit-moderator-bot
+name: jakeellicious
+description: >-
+  A comprehensive moderator utility bot that monitors subreddit activity and
+  sends notifications to Discord via webhooks.
+version: 1.0.0
+permissions:
+  - modqueue
+  - modlog
+  - posts
+  - comments
