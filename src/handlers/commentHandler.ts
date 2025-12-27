@@ -1,4 +1,5 @@
 import { Devvit } from '@devvit/public-api';
+import { shouldNotifyComment } from '../utils/visibility.js';
 
 /**
  * Handler for new comment submissions
@@ -31,10 +32,17 @@ export const setupCommentHandler = (
           return;
         }
 
-        console.log('Processing comment event');
-        
-        // Get comment details
+        // Get comment details first to get the postId
         const comment = await context.reddit.getCommentById(event.comment.id);
+
+        // Check if we should notify based on visibility settings
+        const shouldNotify = await shouldNotifyComment(event.comment.id, comment.postId, settings, context);
+        if (!shouldNotify) {
+          console.log(`[CommentSubmit] Skipping notification for comment ${event.comment.id} - not visible in parent post`);
+          return;
+        }
+
+        console.log('Processing comment event');
         const subreddit = await context.reddit.getCurrentSubreddit();
         
         // Get user avatar (comments don't have rich author data like modmail)

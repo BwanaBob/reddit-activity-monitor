@@ -1,4 +1,5 @@
 import { Devvit } from '@devvit/public-api';
+import { shouldNotifyPost } from '../utils/visibility.js';
 
 /**
  * Handler for new post submissions
@@ -17,6 +18,13 @@ export const setupPostHandler = (
         const monitoredEvents = settings.monitoredEvents as string[];
         
         if (!webhookUrl || !monitoredEvents?.includes('posts') || !event.post?.id) {
+          return;
+        }
+
+        // Check if we should notify based on visibility settings
+        const shouldNotify = await shouldNotifyPost(event.post.id, settings, context);
+        if (!shouldNotify) {
+          console.log(`[PostSubmit] Skipping notification for post ${event.post.id} - not visible on front page`);
           return;
         }
 

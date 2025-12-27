@@ -76,6 +76,30 @@ The Reddit Moderator Bot can be configured through Reddit's app settings interfa
 - **Result**: Role mentions like `<@&123456789>` or `@Moderators`
 - **Use Case**: Notify specific moderation team instead of @everyone
 
+### Only Notify Visible New Posts
+- **Type**: Boolean (Optional)
+- **Description**: When enabled, new post notifications will only be sent for posts that appear in the subreddit's recent new posts listing
+- **Default**: `false` (disabled)
+- **Purpose**: Prevents duplicate notifications for posts filtered by AutoModerator
+- **How it works**: 
+  1. When a new post event is triggered, the bot checks the subreddit's most recent new posts (up to 25 posts)
+  2. If the post ID is found in this chronological listing, the notification is sent normally
+  3. If the post ID is NOT found (likely filtered by AutoMod), the notification is skipped
+- **Use Case**: Reduces spam from posts that get automatically filtered, preventing duplicate notifications from AutoMod events
+- **Note**: If the visibility check fails due to API errors, notifications will still be sent to avoid missing legitimate posts
+
+### Only Notify Visible New Comments
+- **Type**: Boolean (Optional)
+- **Description**: When enabled, new comment notifications will only be sent for comments that appear in the parent post's comment listing
+- **Default**: `false` (disabled)
+- **Purpose**: Prevents duplicate notifications for comments filtered by AutoModerator
+- **How it works**: 
+  1. When a new comment event is triggered, the bot checks the parent post's comment listing (up to 50 recent comments)
+  2. If the comment ID is found in this listing, the notification is sent normally
+  3. If the comment ID is NOT found (likely filtered by AutoMod), the notification is skipped
+- **Use Case**: Reduces spam from comments that get automatically filtered, preventing duplicate notifications from AutoMod events
+- **Note**: If the visibility check fails due to API errors, notifications will still be sent to avoid missing legitimate comments
+
 ### Events to Monitor
 
 ### New Posts Configuration

@@ -51,28 +51,12 @@ export const setupModActionHandler = (
             `Action performed automatically by Reddit's systems` : 
             `Action performed by moderator`,
           color: isRedditAutomated ? 0xff6b35 : getModActionColor(event.action), // Orange for Reddit automated
-          fields: [
-            {
-              name: isRedditAutomated ? 'System' : 'Moderator',
-              value: moderatorName,
-              inline: true,
-            },
-            {
-              name: 'Subreddit',
-              value: `r/${subreddit.name}`,
-              inline: true,
-            },
-            {
-              name: 'Action',
-              value: actionName,
-              inline: true,
-            },
-          ],
+          URL: `https://reddit.com/mod/${subreddit.name}/log`,
+          // fields: [
+          // ],
           timestamp: new Date().toISOString(),
           footer: {
-            text: isRedditAutomated ? 
-              'Reddit Moderator Bot - Reddit Automated Action' : 
-              'Reddit Moderator Bot - Modlog',
+            text: `r/${subreddit.name}`,
           },
         };
 
@@ -93,9 +77,17 @@ export const setupModActionHandler = (
           });
         }
 
+        if(event.moderator?.name) {
+          embed.author = {
+            name: event.moderator.name || '[system]',
+            icon_url: event.moderator.iconImage || undefined,
+            url: event.moderator.url || `https://reddit.com/user/${event.moderator.name}`,
+          };
+        }
+
         await sendDiscordMessage(webhookUrl, {
           embeds: [embed],
-          username: 'Reddit Mod Bot',
+          username: 'Jake',
         }, context);
         
       } catch (error) {
