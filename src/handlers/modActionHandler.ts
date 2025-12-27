@@ -45,15 +45,14 @@ export const setupModActionHandler = (
         const isRedditAutomated = isRedditAutomatedAction(event);
         const moderatorName = event.moderator?.name || '[system]';
         
-        const embed = {
+        const embed: any = {
           title: `${actionEmoji} ${isRedditAutomated ? 'Reddit Automated Action' : 'Moderator Action'}: ${actionName}`,
           description: isRedditAutomated ? 
             `Action performed automatically by Reddit's systems` : 
             `Action performed by moderator`,
           color: isRedditAutomated ? 0xff6b35 : getModActionColor(event.action), // Orange for Reddit automated
-          URL: `https://reddit.com/mod/${subreddit.name}/log`,
-          // fields: [
-          // ],
+          url: `https://reddit.com/mod/${subreddit.name}/log`,
+          fields: [],
           timestamp: new Date().toISOString(),
           footer: {
             text: `r/${subreddit.name}`,
